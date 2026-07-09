@@ -1,0 +1,30 @@
+{
+  "daga_comun": {
+    "nombre": "Daga Oxidada",
+    "tipo_dado": "d4",
+    "atributo_clave": "destreza",
+    "bono_arma": 0,
+    "descripcion": "Una hoja vieja y mellada."
+  },
+  "daga_asesino": {
+    "nombre": "Daga de Asesino",
+    "tipo_dado": "d4",
+    "atributo_clave": "destreza",
+    "bono_arma": 1,
+    "descripcion": "Equilibrada a la perfección, ideal para golpes traicioneros."
+  },
+  "daga_obsidiana": {
+    "nombre": "Daga de Obsidiana",
+    "tipo_dado": "d4",
+    "atributo_clave": "destreza",
+    "bono_arma": 2,
+    "descripcion": "Forjada con cristal volcánico extremadamente afilado."
+  },
+  "espada_larga": {
+    "nombre": "Espada Larga de Acero",
+    "tipo_dado": "d8",
+    "atributo_clave": "fuerza",
+    "bono_arma": 0,
+    "descripcion": "Un arma noble que requiere un brazo firme."
+  }
+}
