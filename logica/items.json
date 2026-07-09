@@ -1,0 +1,20 @@
+{
+  "pocion_menor": {
+    "nombre": "Poción de Vida Menor",
+    "tipo": "consumible",
+    "efecto_id": "curar_menor",
+    "descripcion": "Un frasco de cristal con un líquido rojo brillante que huele a fresas."
+  },
+  "pergamino_fuego": {
+    "nombre": "Pergamino de Bola de Fuego",
+    "tipo": "pergamino",
+    "efecto_id": "dañar_fuego",
+    "descripcion": "Un papiro viejo inscrito con runas calientes al tacto."
+  },
+  "bomba_hielo": {
+    "nombre": "Bomba de Criocristal",
+    "tipo": "arrojadizo",
+    "efecto_id": "congelar",
+    "descripcion": "Una esfera fría que estalla en fragmentos de hielo al impactar."
+  }
+}

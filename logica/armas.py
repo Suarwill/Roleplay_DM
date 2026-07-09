@@ -12,11 +12,8 @@ class Arma:
     def calcular_daño_base(self, dados_instancia, personaje_instancia) -> int:
         metodo_dado = getattr(dados_instancia, self.tipo_dado)
         resultado_dado = metodo_dado()
-        
         modificador_personaje = getattr(personaje_instancia, self.atributo_clave, 0)
-        
         daño_total = resultado_dado + modificador_personaje + self.bono_arma
-        
         return max(1, daño_total)
 
 

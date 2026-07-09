@@ -1,80 +1,71 @@
 from logica.dados import Dados
-from logica.personajes import Personaje
-
 from logica.armas import CATALOGO_ARMAS
+from logica.mobs import generar_encuentro_por_habitat
+from config.configuracion import inicializar_o_cargar_juego, guardar_partida
 
+# --- INICIO DEL JUEGO ---
 dados_juego = Dados()
-
-# 2. Creamos los personajes (Tu código local define estadísticas y personalidad oculta)
-jugador = Personaje(nombre="Ragnar", es_npc=False)
-jugador.fuerza = 3
-jugador.destreza = 4
-
-companero = Personaje(nombre="Valerius el Pícaro", es_npc=True)
-
-print("⚔️ ¡COMIENZA LA AVENTURA! ⚔️")
-print(f"Héroe: {jugador.nombre} (Fuerza: {jugador.fuerza}, Destreza: {jugador.destreza})")
-print(f"Compañero: {companero.nombre} (Alineamiento Oculto: {companero.alineamiento})")
-print("-" * 50)
-
-arma_equipada = CATALOGO_ARMAS["daga_obsidiana"]
-print(f"» Has equipado tu: {arma_equipada.nombre} (+{arma_equipada.bono_arma} de bono)")
-print(f"» Descripción: {arma_equipada.descripcion}\n")
-
-print("⚡ UN ORCO SE LANZA DESDE LAS SOMBRAS. Decides atacar.")
-print("-" * 50)
+jugador, companero = inicializar_o_cargar_juego()
+lugar_actual = "bosque"
 
 # =====================================================================
-# FLUJO DEL TURNO (Mecánicas de dados puras en Python)
+# SIMULACIÓN DE ENCUENTRO Y COMBATE CONTRA UN MOB
 # =====================================================================
 
-# Paso A: El jugador intenta golpear (Tiramos el D20 de éxito)
-numero_sacado, tipo_resultado = dados_juego.d20()
-dificultad_orco = 10
+enemigo = generar_encuentro_por_habitat(lugar_actual)
 
-# Determinamos si el ataque conecta de forma matemática
-ataque_exitoso = tipo_resultado == "CRITICO" or (tipo_resultado == "NORMAL" and numero_sacado >= dificultad_orco)
+print(f"🏕️ Exploras la zona: '{lugar_actual.upper()}'")
+print(f"⚔️ ¡UN ENMIGO APARECE! Un {enemigo.nombre} bloquea el camino.")
+print(f"✨ Atributo único del rival: [{enemigo.atributo_especial}]")
+print(f"❤️ Vida del enemigo: {enemigo.vida_actual}/{enemigo.vida_max} HP\n")
 
-# Paso B: Calculamos las consecuencias en base a los dados
-if tipo_resultado == "CRITICO":
-    # Multiplicamos el daño base o sumamos el máximo dado por ser crítico
-    daño_base = arma_equipada.calcular_daño_base(dados_juego, jugador)
-    daño_final = daño_base * 2
-    print(f"🎲 Sacaste un {numero_sacado} Natual. ¡¡GOLPE CRÍTICO!!")
-    print(f"💥 Destrozas al enemigo infligiendo {daño_final} de daño.")
+# 2. El jugador ataca usando su arma equipada
+arma_jugador = CATALOGO_ARMAS[jugador.arma_equipada] if jugador.arma_equipada else None
 
-elif ataque_exitoso:
-    # Ataque normal: El arma se encarga de tirar su dado (D4), sumar destreza y su bono único
-    daño_final = arma_equipada.calcular_daño_base(dados_juego, jugador)
-    print(f"🎲 Sacaste un {numero_sacado} en el D20 (Supera la dificultad {dificultad_orco}). ¡Impacto!")
-    print(f"⚔️ Logras herir al orco infligiendo {daño_final} de daño.")
-
-else:
-    # Fallo o Pifia
-    print(f"🎲 Sacaste un {numero_sacado} en el D20 (Fallo). El orco esquiva tu ataque.")
+if arma_jugador:
+    print(f"» Atacas al {enemigo.nombre} blandiendo tu {arma_jugador.nombre}...")
     
-    # El enemigo contraataca haciendo daño directo al jugador usando un D8
-    daño_recibido = dados_juego.d8()
-    print(f"🚨 El orco aprovecha tu error y te corta con su cimitarra.")
+    # Tiramos el D20 de impacto
+    num_d20, resultado_d20 = dados_juego.d20()
+    dificultad_defensa_mob = 10  # El trasgo requiere un 10+ para ser golpeado
     
-    # Aplicamos la reducción de vida directamente en las variables del objeto personaje
-    resultado_vida = jugador.recibir_daño(daño_recibido)
-    print(f"↳ {resultado_vida}")
+    if resultado_d20 == "CRITICO" or (resultado_d20 == "NORMAL" and num_d20 >= dificultad_defensa_mob):
+        # ¡Impacto exitoso! Calculamos el daño del arma
+        daño_hecho = arma_jugador.calcular_daño_base(dados_juego, jugador)
+        if resultado_d20 == "CRITICO":
+            daño_hecho *= 2
+            print(f"🎲 ¡GOLPE CRÍTICO (20 Natural)! El daño se duplica.")
+            
+        # Aplicamos el daño al Mob usando el nuevo método
+        mensaje_daño, enemigo_muerto = enemigo.recibir_daño(daño_hecho)
+        print(mensaje_daño)
+        
+        # --- CONTROL DE VICTORIA Y LOOT ---
+        if enemigo_muerto:
+            print(f"🎉 ¡Has ganado! Obtienes {enemigo.exp_otorgada} puntos de experiencia.")
+            
+            # Procesamos si el enemigo soltó items
+            items_obtenidos = enemigo.procesar_loot()
+            
+            if items_obtenidos:
+                print("🎁 El enemigo dejó caer botín:")
+                for item_id in items_obtenidos:
+                    arma_loot = CATALOGO_ARMAS[item_id]
+                    # Añadimos el ID al inventario del personaje de Python
+                    jugador.inventario.append(item_id)
+                    print(f"   - ¡Recogiste: {arma_loot.nombre}! (Añadido a tu inventario)")
+            else:
+                print("📭 Buscas en sus bolsillos pero no encuentras nada de valor.")
+                
+    else:
+        print(f"🎲 Sacaste un {num_d20} en el D20. ¡Fallaste el golpe!")
+        
+        # El enemigo sigue vivo y contraataca
+        daño_mob = enemigo.calcular_daño_ataque(dados_juego)
+        print(f"🚨 El {enemigo.nombre} contraataca velozmente.")
+        mensaje_vida_jugador = jugador.recibir_daño(daño_mob)
+        print(f"   - {mensaje_vida_jugador}")
 
-print("-" * 50)
-
-# =====================================================================
-# CONTROL DE COMPAÑEROS (Ilusión de libre albedrío / Sistema de Confianza)
-# =====================================================================
-# Supongamos que durante el caos, no ayudaste a tu compañero para salvar tu pellejo
-print(f"Decisión del turno: Dejaste que Valerius luchara solo contra dos trasgos.")
-companero.modificar_confianza(-20) # Baja la confianza en el código local
-
-print(f"» Confianza actual de {companero.nombre}: {companero.confianza}/100")
-
-if companero.chequear_traicion():
-    print(f"🚨 [SISTEMA]: Se ha activado la flag de TRAICIÓN. {companero.nombre} te mira con desprecio...")
-    # AQUÍ es el punto exacto donde meterías el JSON estructurado para enviarle a Gemini/Ollama:
-    # "El sistema determinó que el NPC traicionó al jugador. Genera la narrativa."
-else:
-    print(f"» {companero.nombre} sigue cubriéndote la espalda, aunque con dudas.")
+print("\n" + "-"*50)
+# Guardamos el progreso final (por si el jugador obtuvo items en su inventario)
+guardar_partida(jugador, companero)

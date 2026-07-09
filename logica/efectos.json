@@ -1,0 +1,28 @@
+{
+  "curar_menor": {
+    "nombre": "Curación Menor",
+    "tipo": "CURACION",
+    "valor": 5,
+    "descripcion": "Restaura una pequeña cantidad de puntos de vida de forma inmediata."
+  },
+  "dañar_fuego": {
+    "nombre": "Quemadura de Fuego",
+    "tipo": "DAÑO",
+    "valor": 6,
+    "descripcion": "Inflige daño directo al objetivo quemando su armadura o piel."
+  },
+  "congelar": {
+    "nombre": "Congelación",
+    "tipo": "ESTADO_ALTERADO",
+    "estado": "CONGELADO",
+    "duracion_turnos": 2,
+    "descripcion": "Inmoviliza al objetivo impidiendo que realice acciones físicas."
+  },
+  "dormir": {
+    "nombre": "Sueño Profundo",
+    "tipo": "ESTADO_ALTERADO",
+    "estado": "DORMIDO",
+    "duracion_turnos": 3,
+    "descripcion": "Sume al objetivo en un trance. Cualquier daño físico recibido lo despertará."
+  }
+}

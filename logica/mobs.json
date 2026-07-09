@@ -1,0 +1,40 @@
+{
+  "rata": {
+    "nombre": "Rata de Alcantarilla Gigante",
+    "vida_max": 8,
+    "tipo_dado_daño": "d4",
+    "exp_otorgada": 15,
+    "habitat": "alcantarillas",
+    "porcentaje_aparicion": 60,
+    "atributo_especial": "esquiva_agil",
+    "descripcion_especial": "Tiene una gran agilidad en espacios cerrados; los ataques normales tienen penalización.",
+    "tabla_loot": [
+      {"id_item": "daga_comun", "probabilidad": 25}
+    ]
+  },
+  "perro": {
+    "nombre": "Perro Callejero Salvaje",
+    "vida_max": 15,
+    "tipo_dado_daño": "d6",
+    "exp_otorgada": 30,
+    "habitat": "bosque",
+    "porcentaje_aparicion": 50,
+    "atributo_especial": "mordida_infecciosa",
+    "descripcion_especial": "Sus fauces portan enfermedades; si inflige daño máximo, reduce permanentemente 1 HP de Constitución temporal.",
+    "tabla_loot": []
+  },
+  "trasgo": {
+    "nombre": "Trasgo Merodeador (Goblin)",
+    "vida_max": 22,
+    "tipo_dado_daño": "d6",
+    "exp_otorgada": 50,
+    "habitat": "bosque",
+    "porcentaje_aparicion": 30,
+    "atributo_especial": "ataque_furtivo",
+    "descripcion_especial": "Si ataca primero o toma por sorpresa, su primer dado de daño se duplica.",
+    "tabla_loot": [
+      {"id_item": "daga_asesino", "probabilidad": 15},
+      {"id_item": "espada_larga", "probabilidad": 5}
+    ]
+  }
+}

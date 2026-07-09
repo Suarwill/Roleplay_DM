@@ -1,0 +1,36 @@
+{
+    "jugador": {
+        "nombre": "Desiru",
+        "es_npc": false,
+        "STR": 5,
+        "DEX": 1,
+        "CON": 4,
+        "INT": 5,
+        "WIS": 2,
+        "CHA": 5,
+        "vida_max": 52,
+        "vida_actual": 26,
+        "alineamiento": "CB",
+        "confianza": 100,
+        "umbral_traicion": 0,
+        "inventario": [],
+        "arma_equipada": "daga_obsidiana"
+    },
+    "companero": {
+        "nombre": "Kitharus",
+        "es_npc": true,
+        "STR": 2,
+        "DEX": 4,
+        "CON": 4,
+        "INT": 5,
+        "WIS": 2,
+        "CHA": 5,
+        "vida_max": 52,
+        "vida_actual": 52,
+        "alineamiento": "LB",
+        "confianza": 50,
+        "umbral_traicion": 10,
+        "inventario": [],
+        "arma_equipada": null
+    }
+}
